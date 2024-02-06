@@ -7,7 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import shop.mtcoding.blog.user.User;
 
 import java.util.List;
@@ -18,6 +17,31 @@ public class BoardController {
     private final HttpSession session;
 
     private final BoardRepository boardRepository;
+
+    @PostMapping("/board/{id}/delete")
+    public String delete(@PathVariable int id, HttpServletRequest request){
+        // 1. 인증 안되면 겟 아웃
+        User sessionUser = (User) session.getAttribute("sessionUser");
+        System.out.println("2222");
+        if (sessionUser == null){ //401
+            return "redirect:/loginForm";
+        }
+
+        //2.권한 없으면 나가
+        Board board = boardRepository.findById(id);
+        System.out.println("1111");
+        if (board.getUserId() != sessionUser.getId()){
+            request.setAttribute("status",403);
+            request.setAttribute("msg","게시글을 삭제할 권한이 없습니다.");
+            return "error/40x";
+        }
+
+        boardRepository.deleteById(id);
+        System.out.println("3333");
+
+
+        return "redirect:/";
+    }
 
     @PostMapping("/board/save")
     public String save(BoardRequest.SaveDTO requestDTO, HttpServletRequest request){
@@ -73,7 +97,7 @@ public class BoardController {
     public String detail(@PathVariable int id, HttpServletRequest request) {
        //1. 모델 진입 - 상세보기 데이터 가져오기
         // 바디 데이터가 없으면 유효성 검사가 필요없다
-        BoardResponse.DetailDTO responseDTO = boardRepository.findById(id);
+        BoardResponse.DetailDTO responseDTO = boardRepository.findByIdWithUser(id);
 
 
 
