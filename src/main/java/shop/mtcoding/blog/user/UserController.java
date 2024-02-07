@@ -5,7 +5,9 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import shop.mtcoding.blog.board.Board;
 
 
 @RequiredArgsConstructor // final이 붙은 애들에 대한 생성자를 만들어줌
@@ -15,6 +17,8 @@ public class UserController {
     // 자바는 final 변수는 반드시 초기화가 되어야함.
     private final UserRepository userRepository;
     private final HttpSession session;
+
+
 
     // 왜 조회인데 post임? 민간함 정보는 body로 보낸다.
     // 로그인만 예외로 select인데 post 사용

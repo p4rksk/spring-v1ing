@@ -18,6 +18,55 @@ public class BoardController {
 
     private final BoardRepository boardRepository;
 
+    //게시글 수정페이지로 가기
+    @GetMapping("/board/{id}/updateForm")
+    public String updateForm(@PathVariable int id,HttpServletRequest request){
+        //1. 인증 (로그인)
+        User sessionUser = (User) session.getAttribute("sessionUser");
+        if (sessionUser == null){
+            return "redirect:/loginForm";
+        }
+
+        //2. 권한 없으면 나가 (게시글 회원(board(id)이랑 로그인한 회원이랑 동일한지 확인)
+        //모델 위임(id로 board를 조회)
+        Board board = boardRepository.findById(id);
+        if (board.getUserId() != sessionUser.getId()){
+            return "error/403";
+        }
+
+        //3. 가방에 담기(view로 가져가 게시글 수정 하려고)
+        request.setAttribute("board", board);
+
+        return "board/updateForm";
+    }
+
+
+    //게시글 수정하기
+    @PostMapping("/board/{id}/update")
+    public String update(@PathVariable int id, BoardRequest.UpdateDTO requestDTO){
+        //1. 인증 (로그인)
+        User sessionUser = (User) session.getAttribute("sessionUser");
+        if (sessionUser == null){
+            return "redirect:/loginForm";
+        }
+
+        //2. 권한 없으면 나가 (게시글 회원(board(id)이랑 로그인한 회원이랑 동일한지 확인)
+        //모델 위임(id로 board를 조회)
+        Board board = boardRepository.findById(id);
+        if (board.getUserId() != sessionUser.getId()){
+            return "error/403";
+        }
+
+        //3.핵심 로직
+        //update board_tb set title=?, content=? where id=?;
+        boardRepository.update(requestDTO, id);
+
+        return "redirect:/board/"+id;
+
+    }
+
+
+
     @PostMapping("/board/{id}/delete")
     public String delete(@PathVariable int id, HttpServletRequest request){
         // 1. 인증 안되면 겟 아웃

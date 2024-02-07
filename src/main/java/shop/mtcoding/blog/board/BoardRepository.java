@@ -10,9 +10,18 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Repository
-public class BoardRepository {
+public class BoardRepository { //=DAO
     private final EntityManager em;
 
+@Transactional
+    public void update(BoardRequest.UpdateDTO requestDTO, int id){
+        Query query = em.createNativeQuery("update board_tb set title=?, content=? where id =?");
+        query.setParameter(1,requestDTO.getTitle());
+        query.setParameter(2,requestDTO.getTitle());
+        query.setParameter(3,id);
+
+        query.executeUpdate();
+    }
     public List<Board> findAll(){
         Query query = em.createNativeQuery("select * from board_tb order by id desc", Board.class);
         return query.getResultList();
