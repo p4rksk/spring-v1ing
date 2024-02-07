@@ -19,7 +19,20 @@ public class UserController {
     private final UserRepository userRepository;
     private final HttpSession session;
 
+    @PostMapping("/user/updateForm")
+    public String userUpdate(UserRequest.UpdateDTO request){
 
+         session.getAttribute("sessionUser");
+
+
+
+
+
+
+
+
+        return "redirect:/loginForm";
+    }
 
     // 왜 조회인데 post임? 민간함 정보는 body로 보낸다.
     // 로그인만 예외로 select인데 post 사용

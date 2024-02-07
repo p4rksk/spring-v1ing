@@ -21,7 +21,7 @@ public class UserRepository {
     }
 
     @Transactional // db에 write 할때는 필수
-    public void save(UserRequest.JoinDTO requestDTO){
+    public void save(UserRequest.JoinDTO requestDTO) {
         Query query = em.createNativeQuery("insert into user_tb(username, password, email, created_at) values(?,?,?, now())");
         query.setParameter(1, requestDTO.getUsername());
         query.setParameter(2, requestDTO.getPassword());
@@ -29,12 +29,19 @@ public class UserRepository {
         query.executeUpdate();
     }
 
-public User findByUsernameAndPassword(UserRequest.LoginDTO requestDTO) {
-    Query query = em.createNativeQuery("select * from user_tb where username=? and password=?", User.class);
-    query.setParameter(1, requestDTO.getUsername());
-    query.setParameter(2, requestDTO.getPassword());
+    public User findByUsernameAndPassword(UserRequest.LoginDTO requestDTO) {
+        Query query = em.createNativeQuery("select * from user_tb where username=? and password=?", User.class);
+        query.setParameter(1, requestDTO.getUsername());
+        query.setParameter(2, requestDTO.getPassword());
 
-    User user = (User) query.getSingleResult();
-    return user;
-}
+        User user = (User) query.getSingleResult();
+        return user;
+
+    }
+
+    public String passwordUpdate(UserRequest.UpdateDTO requestDTO) {
+        Query query = em.createNativeQuery("update board_tb ");
+        return "";
+
+    }
 }
