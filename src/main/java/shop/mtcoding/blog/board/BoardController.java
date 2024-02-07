@@ -18,18 +18,40 @@ public class BoardController {
 
     private final BoardRepository boardRepository;
 
+
+    //게시글 수정 화면
+    @GetMapping("/board/{id}/updateForm")
+    public String updateForm(@PathVariable int id, HttpServletRequest request){
+        //인증 체크
+        User sessionUser = (User) session.getAttribute("sessionUser");
+        if (sessionUser == null) {
+            return "redirect:/loginForm";
+        }
+
+        //2/권한 체크
+        Board board = boardRepository.findById(id);
+        if (board.getUserId() != sessionUser.getId()){
+            return "error/403";
+        }
+
+        //3.가방에 담기
+        request.setAttribute("board",board);
+
+
+
+        return "board/updateForm";
+    }
+
     @PostMapping("/board/{id}/delete")
     public String delete(@PathVariable int id, HttpServletRequest request){
         // 1. 인증 안되면 겟 아웃
         User sessionUser = (User) session.getAttribute("sessionUser");
-        System.out.println("2222");
         if (sessionUser == null){ //401
             return "redirect:/loginForm";
         }
 
         //2.권한 없으면 나가
         Board board = boardRepository.findById(id);
-        System.out.println("1111");
         if (board.getUserId() != sessionUser.getId()){
             request.setAttribute("status",403);
             request.setAttribute("msg","게시글을 삭제할 권한이 없습니다.");
@@ -37,7 +59,6 @@ public class BoardController {
         }
 
         boardRepository.deleteById(id);
-        System.out.println("3333");
 
 
         return "redirect:/";
