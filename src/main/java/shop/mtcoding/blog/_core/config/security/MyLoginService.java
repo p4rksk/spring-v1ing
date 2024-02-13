@@ -13,7 +13,7 @@ import shop.mtcoding.blog.user.UserRepository;
 //조건 POST,/login, x-www.form-urlencoded, 키 값이 username , password
 @RequiredArgsConstructor
 @Service
-public class MyLoginService implements UserDetailsService { //controllr에서 구현 했던 로그인 페이지 코드가 들어가야됨
+public class MyLoginService implements UserDetailsService { //controller에서 구현 했던 로그인 페이지 코드가 들어가야됨
     private final UserRepository userRepository;
     private final HttpSession session;
     @Override
