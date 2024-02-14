@@ -33,7 +33,7 @@ public class SecurityConfig {
             authorize.requestMatchers(RegexRequestMatcher.regexMatcher("/board/\\d+")).permitAll()
                     .requestMatchers("/user/**", "/board/**").authenticated()
                     .anyRequest().permitAll();
-            // 인증이 필요한 페이지 설정 / .anyRequest().permitAll();는 인증이 필요한 페이지가 자연적으로 로고인 페이지로 redirection되게 설정
+            // 인증이 필요한 페이지 설정 / .anyRequest().permitAll();는 인증이 필요한 페이지가 자연적으로 로그인 페이지로 redirection되게 설정
 
         });
 
